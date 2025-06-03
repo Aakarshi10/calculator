@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <script>
+window.onload = function () {
+    const display = document.getElementById('display');
+   const buttons = document.querySelectorAll('.btn');
+   const themeToggle = document.getElementById('themeToggle');
+   const clickSound = document.getElementById('clickSound');
+
+  function playSound() {
+  clickSound.currentTime = 0;
+  clickSound.play();
+}
+
+
+let expression = '';
+
+function updateDisplay() {
+  display.value = expression;
+}
+
+function calculateResult() {
+  try {
+       expression = eval(expression).toString();
+    updateDisplay();
+  } catch {
+    expression = 'Error';
+    updateDisplay();
+  }
+}
+playSound();
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    const key = button.getAttribute('data-key');
+    
+    if (key === 'C') {
+      expression = '';
+    } else if (key === '=') {
+      calculateResult();
+      return;
+    } else if (key === 'Backspace') {
+      expression = expression.slice(0, -1);
+    } else if (key === 'cbrt') {
+  try {
+    expression = Math.cbrt(eval(expression)).toString();
+  } catch {
+    expression = 'Error';
+  }
+
+
+     } else if (key === 'sqrt') {
+      try {
+        expression = Math.sqrt(eval(expression)).toString();
+      } catch {
+        expression = 'Error';
+      }
+    } else if (key === 'square') {
+      try {
+        expression = (eval(expression) ** 2).toString();
+      } catch {
+        expression = 'Error';
+      }
+       } else if (key === '%'){
+      try {
+          expression = (eval(expression) /100).toString();
+      } catch {
+        expression = 'Error';
+      }
+     } else if (key === '+/-') {
+       try {
+       expression = (-1 * eval(expression)).toString();
+      } catch {
+       expression = 'Error';
+       } 
+      } else {
+      expression += key;
+     }
+
+    updateDisplay();
+  });
+});
+
+// Keyboard support
+document.addEventListener('keydown', (e) => {
+  const key = e.key;
+
+  if ((key >= '0' && key <= '9') || ['+', '-', '*', '/', '%','+/-','.', '(', ')'].includes(key)) {
+    expression += key;
+  } else if (key === 'Enter') {
+    calculateResult();
+    return;
+  } else if (key === 'Backspace') {
+    expression = expression.slice(0, -1);
+  } else if (key === 'Escape') {
+    expression = '';
+  } else {
+    return;
+  }
+playSound();
+updateDisplay();
+});
+
+themeToggle.addEventListener('click', () => {
+  if (document.body.classList.contains('dark')) {
+    document.body.classList.remove('dark');
+    document.body.classList.add('light');
+    themeToggle.textContent = 'Switch to Dark Mode';
+  } else {
+    document.body.classList.remove('light');
+    document.body.classList.add('dark');
+    themeToggle.textContent = 'Switch to Light Mode';
+  }
+
+});
+}
+  </script>
+<style>
+  body {
+  background: #e0f7fa;
+  display: flex;
+  color:#222;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.calculator {
+  background: #1e1e2f;
+  color:#222;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  width: 320px;
+}
+#display {
+  width: 100%;
+  height: 60px;
+  font-size: 2rem;
+  border: none;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: right;
+  background: #2d2d3a;
+  color: white;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.btn {
+  background:#81d4fa;
+  color:#005662;
+  padding: 20px;
+font-size: 1.2rem;
+  background: #39394d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: #4fc3f7;
+  color:#003f4a;
+}
+
+.equals {
+
+  grid-column: span 1;
+  background-color: #ff9f0a;
+  color: black;
+}
+
+.zero {
+  grid-column: span 2;
+}
+#display {
+  box-shadow: inset 0 0 10px #b2ebf2;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+}
+body.light {
+  background-color: #e0f7fa;
+  color: #222;
+}
+
+body.light .calculator {
+  background-color: #ffffffdd;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+  color: #222;
+}
+
+body.light #display {
+  background-color: #f0f0f0;
+  color: #222;
+}
+
+body.light .btn {
+  background-color: #81d4fa;
+  color: #005662;
+}
+
+body.light .btn:hover {
+  background-color: #4fc3f7;
+  color: #003f4a;
+}
+
+body.light .equals {
+  background-color: #0288d1;
+  color: white;
+}
+
+#themeToggle {
+  margin-bottom: 15px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  background: #ff9f0a;
+  color: black;
+  transition: background-color 0.3s ease;
+}
+
+#themeToggle:hover {
+  background: #e68a00;
+}
+
+</style>  
+</head>
+<body style="background-color:lightCyan" class="dark">
+  <button id="themeToggle">Switch to Light Mode</button>
+
+  <div class="calculator">
+    <input type="text" id="display" readonly />
+    <div class="buttons">
+      <button class="btn" data-key="C">AC</button>
+      <button class="btn" data-key="+/-">+/-</button>
+      <button class="btn" data-key="%">%</button>
+      <button class="btn" data-key="Backspace">⌫</button>
+      <button class="btn equals" data-key="/">÷</button>
+
+      <button class="btn" data-key="7">7</button>
+      <button class="btn" data-key="8">8</button>
+      <button class="btn" data-key="9">9</button>
+      <button class="btn equals" data-key="*">x</button>
+     
+      <button class="btn" data-key="4">4</button>
+      <button class="btn" data-key="5">5</button>
+      <button class="btn" data-key="6">6</button>
+      <button class="btn equals" data-key="-">-</button>
+
+      <button class="btn" data-key="1">1</button>
+       <button class="btn" data-key="2">2</button>
+      <button class="btn" data-key="3">3</button>
+      <button class="btn equals" data-key="+">+</button>
+
+      <button class="btn zero" data-key="0">0</button>
+      <button class="btn" data-key=".">.</button>
+
+      <button class="btn equals" data-key="=">=</button>
+      <button class="btn" data-key="sqrt">√</button>
+      <button class="btn" data-key="square">x²</button>     
+      <button class="btn" data-key="cbrt">∛</button>
+</div>
+  </div>
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+
+  
+</body>
+</html>
